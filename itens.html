@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        #listaItens div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        #listaItens div:nth-child(odd) {
+            background-color: #f0f0f0; /* Cor cinza clara para linhas ímpares */
+        }
+
+        #listaItens div:nth-child(even) {
+            background-color: #ffffff; /* Cor branca para linhas pares */
+        }
+
+        input[type="number"] {
+            width: 50px; /* Diminui a célula de quantidade */
+            margin-left: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        /* Botão */
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Formulário de novo item */
+        div {
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleção de Itens</title>
+    <script>
+        function adicionarItem() {
+            // Obtém os valores dos inputs do novo item
+            const nomeItem = document.getElementById('nomeItem').value;
+            const precoItem = parseFloat(document.getElementById('precoItem').value).toFixed(2);
+            const quantidadeItem = document.getElementById('quantidadeItem').value;
+
+            if (nomeItem && precoItem && quantidadeItem) {
+                // Cria um novo elemento de item na lista de produtos
+                const itemContainer = document.getElementById('listaItens');
+
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <input type="checkbox" name="item" value="${nomeItem}" data-preco="${precoItem}">
+                    ${nomeItem} - R$ ${precoItem}
+                    <input type="number" name="quantidade" value="${quantidadeItem}" min="1">
+                `;
+                itemContainer.appendChild(div);
+
+                // Limpa os campos de input após adicionar o item
+                document.getElementById('nomeItem').value = '';
+                document.getElementById('precoItem').value = '';
+                document.getElementById('quantidadeItem').value = 1;
+            } else {
+                alert("Por favor, preencha todos os campos do novo item.");
+            }
+        }
+
+        function enviarItens() {
+            const itensSelecionados = [];
+            const checkboxes = document.querySelectorAll('input[name="item"]:checked');
+            checkboxes.forEach((checkbox) => {
+                const quantidadeInput = checkbox.parentNode.querySelector('input[name="quantidade"]');
+                const preco = checkbox.getAttribute('data-preco');
+                const item = {
+                    nome: checkbox.value,
+                    preco: preco,
+                    quantidade: quantidadeInput.value
+                };
+                itensSelecionados.push(item);
+            });
+
+            // Armazena itens no localStorage para a próxima página
+            localStorage.setItem('itensSelecionados', JSON.stringify(itensSelecionados));
+
+            // Redireciona para a página de resumo
+            window.location.href = 'resumo.html';
+        }
+    </script>
+</head>
+<body>
+    <h1>Selecione os Itens Vendidos</h1>
+    <div id="listaItens">
+        <div>
+            <input type="checkbox" name="item" value="FEIJOADA (Refeição)" data-preco="40.00"> FEIJOADA (Refeição) - R$ 40,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="PANELADA (Refeição)" data-preco="48.00"> PANELADA (Refeição) - R$ 48,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="PEIXADA (Refeição)" data-preco="55.00"> PEIXADA (Refeição) - R$ 55,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="PEIXE FRITO (Refeição)" data-preco="50.00"> PEIXE FRITO (Refeição) - R$ 50,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="ARROZ (PORÇÃO)" data-preco="10.00"> ARROZ (PORÇÃO) - R$ 10,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="CARNE COM FRITAS" data-preco="40.00"> CARNE COM FRITAS - R$ 40,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="PEIXE FRITO (TiraGosto)" data-preco="40.00"> PEIXE FRITO (TiraGosto) - R$ 40,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="PANELADA  (TiraGosto) P" data-preco="18.00"> PANELADA  (TiraGosto) P - R$ 18,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="PANELADA  (TiraGosto) G" data-preco="30.00"> PANELADA  (TiraGosto) G - R$ 30,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="CALABRESA ACEBOLADA" data-preco="22.00"> CALABRESA ACEBOLADA - R$ 22,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="CALABRESA COM FRITAS" data-preco="34.00"> CALABRESA COM FRITAS - R$ 34,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="BATATA FRITA" data-preco="15.00"> BATATA FRITA - R$ 15,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="CACHORRO-QUENTE" data-preco="15.00"> CACHORRO-QUENTE - R$ 15,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="CALDO COM OVO" data-preco="10.00"> CALDO COM OVO - R$ 10,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+<H1><B>CERVEJAS</B></h1>
+        <div>
+            <input type="checkbox" name="item" value="HEINEKEN" data-preco="13.50"> HEINEKEN - R$ 13,50
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="SPATEN, STELLA" data-preco="12.00"> SPATEN, STELLA - R$ 12,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="SKOL, BRAHMA " data-preco="9.00"> SKOL, BRAHMA - R$ 9,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="ENERGÉTICO" data-preco="12.00"> ENERGÉTICO - R$ 12,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="REFRI LITRO" data-preco="8.00"> REFRI LITRO - R$ 8,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="REFRI LATA" data-preco="5.00"> REFRI LATA - R$ 5,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="ÁGUA SEM GÁS" data-preco="3.00"> ÁGUA SEM GÁS - R$ 3,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="ÁGUA COM GÁS" data-preco="4.00"> ÁGUA COM GÁS - R$ 4,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="CAJUINA" data-preco="8.00"> CAJUINA - R$ 8,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="COCO" data-preco="5.00"> COCO - R$ 5,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+        <div>
+            <input type="checkbox" name="item" value="ENTRADA" data-preco="10.00"> ENTRADA - R$ 10,00
+            <input type="number" name="quantidade" value="1" min="1">
+        </div>
+    </div>
+
+    <h2>Adicionar Novo Item</h2>
+    <div>
+        <label for="nomeItem">Nome do Item:</label>
+        <input type="text" id="nomeItem" placeholder="Nome do item">
+    </div>
+    <div>
+        <label for="precoItem">Preço do Item:</label>
+        <input type="number" id="precoItem" placeholder="Preço do item" step="0.01">
+    </div>
+    <div>
+        <label for="quantidadeItem">Quantidade:</label>
+        <input type="number" id="quantidadeItem" value="1" min="1">
+    </div>
+    <button type="button" onclick="adicionarItem()">Adicionar Item</button>
+
+    <hr>
+
+    <button type="button" onclick="enviarItens()">Próximo</button>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo da Venda</title>
+    <!-- Importa jsPDF via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        h3 {
+            color: #28a745;
+            font-size: 24px;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #e68900;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resumo da Venda</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Preço Unitário</th>
+                <th>Quantidade</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="tabelaItens">
+            <!-- Linhas adicionadas dinamicamente -->
+        </tbody>
+    </table>
+
+    <h3 id="valorTotal"></h3>
+
+    <a href="itens.html">Voltar</a>
+    <button onclick="salvarPDF()">Salvar como PDF</button>
+
+    <script>
+        function carregarResumo() {
+            const itensSelecionados = JSON.parse(localStorage.getItem('itensSelecionados')) || [];
+            const tabelaItens = document.getElementById('tabelaItens');
+            let total = 0;
+
+            itensSelecionados.forEach((item) => {
+                const precoTotal = item.preco * item.quantidade;
+                total += precoTotal;
+
+                // Adiciona o item na tabela
+                const linha = tabelaItens.insertRow();
+                linha.insertCell(0).innerText = item.nome;
+                linha.insertCell(1).innerText = `R$ ${parseFloat(item.preco).toFixed(2)}`;
+                linha.insertCell(2).innerText = item.quantidade;
+                linha.insertCell(3).innerText = `R$ ${precoTotal.toFixed(2)}`;
+            });
+
+            // Exibe o valor total
+            document.getElementById('valorTotal').innerText = `Total Geral: R$ ${total.toFixed(2)}`;
+        }
+
+        window.onload = carregarResumo;
+
+        function salvarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Adiciona o título
+            doc.setFontSize(18);
+            doc.text("Resumo da Venda", 10, 10);
+
+            // Adiciona a tabela
+            let linhaY = 20;
+            const tabela = document.querySelectorAll('table tbody tr');
+            tabela.forEach((row, index) => {
+                const cols = row.querySelectorAll('td');
+                doc.setFontSize(12);
+                doc.text(10, linhaY, `${cols[0].innerText} | ${cols[1].innerText} | ${cols[2].innerText} | ${cols[3].innerText}`);
+                linhaY += 10;
+            });
+
+            // Adiciona o valor total
+            const totalGeral = document.getElementById('valorTotal').innerText;
+            doc.text(10, linhaY + 10, totalGeral);
+
+            // Salva o PDF
+            doc.save('resumo_venda.pdf');
+        }
+    </script>
+</body>
+</html>
